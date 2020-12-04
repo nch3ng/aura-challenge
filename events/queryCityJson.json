@@ -1,0 +1,8 @@
+{
+  "httpMethod": "POST",
+  "path": "/resouce",
+  "headers": {
+    "content-type": "application/json"
+  },
+  "body": "{\"city\":\"Douglas\"}"
+}

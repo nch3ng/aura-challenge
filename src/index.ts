@@ -92,37 +92,64 @@ const assignZips = (grids: Grid [], zips: Zip []) => {
   return grids;
 }
 
+const readParams = (event) => {
+  
+  const validParams = ['city', 'zipcode', 'coordinates'];
+  let params: any = event.queryStringParameters || JSON.parse(event.body) ;
+  if (params) {
+    for (let key in params) {
+      if (validParams.includes(key)) {
+        return  { name: key, value: params[key] };
+      }
+    }
+    return null;
+  }
+} 
+
 // End of building and assign zips
 module.exports.handler = async event => {
   // do stuff...
   console.log('Received event:', JSON.stringify(event, null, 2));
   let result;
+  const mapTable = {
+    city: ['primary_city','acceptable_cities'],
+    zipcode: ['zip']
+  }
   try {
+    const param: any = readParams(event);
+    if (!param) throw '400 Invalid Input';
+    // console.log(params);
+
     const zips = JSON.parse(fs.readFileSync('./src/data.json').toString());
-    
-    if (event.queryStringParameters && event.queryStringParameters.city) {
-      const cityQuery = event.queryStringParameters.city;
-      console.log(cityQuery);
-      result = zips.filter((zip: Zip) => {
-        if ((zip.primary_city && zip.primary_city.includes(cityQuery)) || zip.acceptable_cities && zip.acceptable_cities.includes(cityQuery)) {
-          console.log(zip)
+
+    console.log(mapTable[param.name])
+    result = zips.filter((zip: Zip) => {
+      for (let field of mapTable[param.name]) {
+        // console.log(zip[field]);
+        if (!!zip[field] && zip[field].includes(param.value)) {
+          console.log('included?')
           return true;
         }
-      })
-    }
+      }
 
-    if (event.queryStringParameters && event.queryStringParameters.zipcode) {
-      const zipcodeQuery = event.queryStringParameters.zipcode;
-      console.log(zipcodeQuery);
-      result = zips.filter((zip: Zip) => {
-        if ((zip.zip && zip.zip.includes(zipcodeQuery))) {
-          console.log(zip)
-          return true;
-        }
-      })
-    }
+      // const cityQuery = param.city;
+      // if ((zip.primary_city && zip.primary_city.includes(cityQuery)) || zip.acceptable_cities && zip.acceptable_cities.includes(cityQuery)) {
+      //   console.log(zip)
+      //   return true;
+      // }
+    })
 
     
+    // const zipcodeQuery = params.zipcode;
+    // console.log(zipcodeQuery);
+    // result = zips.filter((zip: Zip) => {
+    //   if ((zip.zip && zip.zip.includes(zipcodeQuery))) {
+    //     console.log(zip)
+    //     return true;
+    //   }
+    // })
+
+
   } catch (error) {
     return {
       statusCode: 400,
