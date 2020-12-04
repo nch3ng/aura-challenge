@@ -7,10 +7,17 @@
     "npm": ">=6.0.0"
   },
   "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
     "jest": "^26.0.1",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "serverless-dynamodb-local": "^0.2.39",
+    "serverless-offline": "^6.8.0",
+    "serverless-plugin-typescript": "^1.1.9",
+    "typescript": "^4.0.3"
   },
-  "dependencies": {},
+  "dependencies": {
+    "aws-sdk": "^2.799.0"
+  },
   "scripts": {
     "format:fix": "prettier --write **/*.{js,ts,md}",
     "test": "jest"

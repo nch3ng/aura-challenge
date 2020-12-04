@@ -1,0 +1,87 @@
+service: aura-zipcode
+
+# frameworkVersion: ">=1.1.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  environment:
+    SERVICE_NAME: ${self:service}
+    ZIP_TABLE: zips-${opt:stage, self:provider.stage}
+    GRID_TABLE: grids-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: 
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.ZIP_TABLE}"
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.GRID_TABLE}"
+
+functions:       
+  search:
+    handler: src/index.handler
+    events:
+      - http:
+          path: /resource
+          method: get
+  importGrid:
+    handler: src/index.importGrid
+    events:
+      - http:
+          path: /resource/import
+          method: post
+  importZip:
+    handler: src/index.importZip
+    events:
+      - http:
+          path: /resource/importZip
+          method: post
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-dynamodb-local
+  - serverless-offline
+
+custom:
+  dynamodb:
+    start:
+      migrate: true
+    stages:
+      - dev
+
+resources:
+  Resources:
+    ZipsDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:provider.environment.ZIP_TABLE}
+        AttributeDefinitions:
+          - AttributeName: estimated_population
+            AttributeType: S
+        KeySchema:
+          - AttributeName: estimated_population
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    GridsDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:provider.environment.GRID_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
