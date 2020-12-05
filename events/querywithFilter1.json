@@ -3,5 +3,7 @@
   "path": "/zipcode/search",
   "headers": {},
   "queryStringParameters": {
+    "zipcode": "0158",
+    "filter": "county eq 'Worcester County'"
   }
 }

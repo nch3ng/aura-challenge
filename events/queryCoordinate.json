@@ -3,5 +3,6 @@
   "path": "/zipcode/search",
   "headers": {},
   "queryStringParameters": {
+    "coordinate": [44,-70]
   }
 }

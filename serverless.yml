@@ -28,7 +28,7 @@ functions:
     handler: src/index.handler
     events:
       - http:
-          path: /resource
+          path: /zipcode/search
           method: get
   importGrid:
     handler: src/index.importGrid
@@ -42,7 +42,12 @@ functions:
       - http:
           path: /resource/importZip
           method: post
-
+  generateGrid:
+    handler: src/index.generateGrid
+    events:
+      - http:
+          path: /resource/generateGrid
+          method: post
 plugins:
   - serverless-plugin-typescript
   - serverless-dynamodb-local

@@ -1,6 +1,6 @@
 {
   "httpMethod": "POST",
-  "path": "/resouce",
+  "path": "/zipcode/search",
   "headers": {
     "content-type": "application/json"
   },

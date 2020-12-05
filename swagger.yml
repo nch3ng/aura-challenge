@@ -1,0 +1,107 @@
+openapi: 3.0.0
+info:
+  title: zipcode API
+  description: zipcode API (aura-challenge)
+  version: 0.0.1
+
+servers:
+- url: http://api.example.com/v1
+  description: the api v1 for prod
+- url: http://staging-api.example.com
+  description: api v1 for staging
+
+paths:
+  /zipcode/search:
+    get:
+      summary: search zipcodes
+      description: |
+        By passing in the appropriate options, you can search for the valid zipcodes
+      parameters:
+        - in: query
+          name: city
+          description: pass an optional full or partial city name string for looking up zipcodes
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: zipcode
+          description: pass an optional full or partial zipcode string for looking up zipcode
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: coordinate
+          description: maximum number of records to return
+          required: false
+          schema:
+            type: array
+            items: 
+              type: number
+      responses:
+        '200':    # status code
+          description: A JSON array of zipcodes
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/ZipItem'
+        '400':
+          description: bad input parameter
+    
+components:
+  schemas:
+    ZipItem:
+      type: object
+      required:
+        - zip
+        - type
+        - primary_city
+        - acceptable_cities
+        - unacceptable_cities
+      properties:
+        zip:
+          type: string
+          example: '01583'
+        type:
+          type: string
+          example: 'STANDARD'
+        primary_city:
+          type: string
+          format: string
+          example: 'New Tork'
+        acceptable_cities:
+          type: string
+          example: 'E Hampton, Mount Tom, Westhampton'
+        unacceptable_cities:
+          type: string
+          example: 'E Hampton, Mount Tom, Westhampton'
+        state:
+          type: string
+          example: 'NY'
+        county:
+          type: string
+          example: 'Hampshire County'
+        timezone:
+          type: string
+          format: timezone
+          example: 'America/New_York'
+        area_codes: 
+          type: string
+          format: number
+          example: 413
+        latitude: 
+          type: string
+          format: number
+          example: 42.26
+        longitude:
+          type: string
+          format: number
+          example: 42.26
+        country:
+          type: string
+          example: 'US'
+        estimated_population: 
+          type: string
+          format: number
+          example: 15525
