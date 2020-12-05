@@ -9,6 +9,10 @@
 npm install -g serverless
 ```
 
+## Install dependencies
+```shell
+npm install
+```
 ## API definition
 
    [https://github.com/qqnc/aura-challenge/blob/main/swagger.yml](https://github.com/qqnc/aura-challenge/blob/main/swagger.yml)
