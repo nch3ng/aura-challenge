@@ -37,6 +37,12 @@ paths:
             type: array
             items: 
               type: number
+        - in: query
+          name: filter
+          description: to filter the result with pegjs syntax after search
+          required: false
+          schema:
+            type: string
       responses:
         '200':    # status code
           description: A JSON array of zipcodes
@@ -48,6 +54,25 @@ paths:
                   $ref: '#/components/schemas/ZipItem'
         '400':
           description: bad input parameter
+    post:
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchParams'
+      responses:
+        '200':    # status code
+          description: A JSON array of zipcodes
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/ZipItem'
+        '400':
+          description: bad input parameter
+    
     
 components:
   schemas:
@@ -105,3 +130,16 @@ components:
           type: string
           format: number
           example: 15525
+    SearchParams:
+      type: object
+      properties:
+        city:
+          type: string
+        zipcode:
+          type: string
+        coordinate:
+          type: array
+          items:
+            type: integer
+        filter:
+          type: string

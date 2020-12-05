@@ -1,17 +1,17 @@
-import * as fs from 'fs';
-import { Zip } from './types';
-import * as util from './utils';
+import * as fs from "fs";
+import { Zip } from "./types";
+import * as util from "./utils";
 
 export default class DataStore {
   dataPath: string;
   gridPath: string;
-  _zips: Zip [];
+  _zips: Zip[];
   _indexGrids: {};
 
   mapTable = {
-    city: ['primary_city','acceptable_cities'],
-    zipcode: ['zip']
-  }
+    city: ["primary_city", "acceptable_cities"],
+    zipcode: ["zip"]
+  };
   constructor(dataPath: any, gridPath: any) {
     this.dataPath = dataPath;
     this.gridPath = gridPath;
@@ -28,7 +28,7 @@ export default class DataStore {
     // dataPath is database
   }
 
-  zips(){
+  zips() {
     return this._zips;
   }
 
@@ -44,14 +44,14 @@ export default class DataStore {
           return true;
         }
       }
-    }) 
+    });
   }
 
   findClosestZip(value) {
     return util.findClosestZip(this._indexGrids, value);
   }
-  
-  filter(zips: Zip [], filter: string) {
+
+  filter(zips: Zip[], filter: string) {
     return util.filter(zips, filter);
   }
 }
