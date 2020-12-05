@@ -12,14 +12,21 @@ const buildQueryParams = (param: string, value: any) => {
   return response;
 }
 
-const buildRequestBody = (param: string, value: any) => {
+const buildRequestBody = (param: string, value: any, filter?: string) => {
+  let bodyStr;
+
+  if (filter) {
+    bodyStr = `{\"${param}\":\"${value}\", \"filter\":\"${filter}\"}`
+  } else {
+    bodyStr = `{\"${param}\":\"${value}\"}`;
+  }
   return {
     httpMethod: "POST",
     path: "/zipcode/search",
     headers: {
       "content-type": "application/json"
     },
-    body: `{\"${param}\":\"${value}\"}`
+    body: bodyStr
   }
 }
 
@@ -56,6 +63,22 @@ describe("basic tests", () => {
     "estimated_population": "0"
   },
   {
+    "zip": "01020",
+    "type": "STANDARD",
+    "primary_city": "Chicopee",
+    "acceptable_cities": "Test City123",
+    "unacceptable_cities": null,
+    "state": "MA",
+    "county": "Hampden County",
+    "timezone": "America/New_York",
+    "area_codes": "413",
+    "latitude": "42.17",
+    "longitude": "-72.57",
+    "country": "US",
+    "estimated_population": "24570"
+  }];
+
+  const partial_city_search_result_with_filter = [{
     "zip": "01020",
     "type": "STANDARD",
     "primary_city": "Chicopee",
@@ -217,6 +240,13 @@ describe("basic tests", () => {
 
       await expect(handler(event)).resolves.toHaveProperty('zips', closest_zip_result);  
     });
+
+    it('should filter zipcodes with population', async () => {
+      const event = buildQueryParams('city', 'Test City1');
+      event.queryStringParameters.filter = 'estimated_population gt 16000';
+
+      await expect(handler(event)).resolves.toHaveProperty('zips', partial_city_search_result_with_filter);  
+    });
     it('should return error if coordinate out of boundary', async () => {
       const event = buildQueryParams('coordinate', [30, -71.90]);
 
@@ -227,6 +257,20 @@ describe("basic tests", () => {
       const event = buildQueryParams('city12', 'Test City1');
 
       await expect(handler(event)).resolves.toHaveProperty('error', '400 Invalid Input');  
+    });
+
+    it('should return error if with bad filter', async () => {
+      const event = buildQueryParams('city', 'Test City1');
+      event.queryStringParameters.filter = 'estimated_population in 16000';
+
+      await expect(handler(event)).resolves.toHaveProperty('error', 'the filter format is incorrect');  
+    });
+
+    it('should return error if using deeper filter', async () => {
+      const event = buildQueryParams('city', 'Test City1');
+      event.queryStringParameters.filter = 'estimated_population gt 16000 and estimated_population lt 26000';
+
+      await expect(handler(event)).resolves.toHaveProperty('error', 'Hasn\'t support deeper filter at the moment');  
     });
   });
 
@@ -258,6 +302,12 @@ describe("basic tests", () => {
       await expect(handler(event)).resolves.toHaveProperty('zips', closest_zip_result);  
     });
 
+    it('should filter zipcodes with population', async () => {
+      const event = buildRequestBody('city', 'Test City1', 'estimated_population gt 16000');
+
+      await expect(handler(event)).resolves.toHaveProperty('zips', partial_city_search_result_with_filter);  
+    });
+
     it('should return error if coordinate out of boundary', async () => {
       const event = buildRequestBody('coordinate', [30, -71.90]);
 
@@ -268,6 +318,17 @@ describe("basic tests", () => {
       const event = buildRequestBody('city12', 'Test City1');
 
       await expect(handler(event)).resolves.toHaveProperty('error', '400 Invalid Input');  
+    });
+    it('should return error if with bad filter', async () => {
+      const event = buildRequestBody('city', 'Test City1', 'estimated_population in 16000');
+
+      await expect(handler(event)).resolves.toHaveProperty('error', 'the filter format is incorrect');  
+    });
+
+    it('should return error if using deeper filter', async () => {
+      const event = buildRequestBody('city', 'Test City1', 'estimated_population gt 16000 and estimated_population lt 26000');
+
+      await expect(handler(event)).resolves.toHaveProperty('error', 'Hasn\'t support deeper filter at the moment');  
     });
   });
 });

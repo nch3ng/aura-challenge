@@ -111,6 +111,7 @@ const getEdgeGridId = (currentId, layer: number) => {
 }
 
 export const findClosestZip = (grids: any, coordinate: number [] | string) => {
+  
   if (typeof coordinate === 'string') {
     // handle coordinate in body
     coordinate = coordinate.split(',').map(coord => +coord) ;
@@ -153,7 +154,6 @@ export const filter = (zips: Zip [], filterStr) => {
   let result;
   if (!filterObject.error) {
     const operator = filterObject.$filter.type;
-    console.log(operator)
     let field, value;
     if (filterObject.$filter.left.type === 'property') {
     //   console.log(filter);

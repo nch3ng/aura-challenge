@@ -26,7 +26,14 @@ const handler = async event => {
 
     if (event.queryStringParameters && event.queryStringParameters.filter) {
       result = ds.filter(result, event.queryStringParameters.filter);
+    } else if (event.body) {
+      const filter = JSON.parse(event.body).filter;
+      if(JSON.parse(event.body).filter) {
+        result = ds.filter(result, filter);
+      }
     }
+    // console.log(filter)
+    // result = ds.filter(result, filter);
   } catch (error) {
     return {
       statusCode: 400,
