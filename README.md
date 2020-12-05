@@ -8,15 +8,14 @@
 ```shell
 npm install -g serverless
 ```
+## API definition
+
+   [https://github.com/qqnc/aura-challenge/blob/main/swagger.yml](https://github.com/qqnc/aura-challenge/blob/main/swagger.yml)
 
 ## Install dependencies
 ```shell
 npm install
 ```
-## API definition
-
-   [https://github.com/qqnc/aura-challenge/blob/main/swagger.yml](https://github.com/qqnc/aura-challenge/blob/main/swagger.yml)
-
 ## Run with events
 All test events are saved in `./events`
 
