@@ -1,6 +1,6 @@
 import { Grid, Point, Zip } from "./types";
 const parser = require('odata-parser');
-const partition = 10.0
+const partition = 10
 // All grids are mutually exclusive
 // Only run once for generating the grids info
 export const buildGrids = (zips: Zip []): Grid [] => {
@@ -59,11 +59,11 @@ export const assignZips = (grids: Grid [], zips: Zip []) => {
 export const readParams = (event) => {
   
   const validParams = ['city', 'zipcode', 'coordinate']; // Accept params
-  let params: any = event.queryStringParameters || JSON.parse(event.body) ;
+  let params: any = event.queryStringParameters || JSON.parse(event.body);
   if (params) {
     for (let key in params) {
       if (validParams.includes(key)) {
-        return  { name: key, value: params[key] };
+          return  { name: key, value: params[key] };
       }
     }
     return null;
@@ -110,15 +110,30 @@ const getEdgeGridId = (currentId, layer: number) => {
   return surroundGridId;
 }
 
-export const findClosestZip = (grids: any, coordinate: [number, number]) => {
+export const findClosestZip = (grids: any, coordinate: number [] | string) => {
+  if (typeof coordinate === 'string') {
+    // handle coordinate in body
+    coordinate = coordinate.split(',').map(coord => +coord) ;
+  }
+  let boundary = {
+    top: grids[1].top,
+    left: grids[1].left,
+    right: grids[partition*partition].right,
+    bottom: grids[partition*partition].bottom
+  }
   const lat = +coordinate[0], long = +coordinate[1]
-  
+
+  if (lat > boundary.top || lat < boundary.bottom || long < boundary.left || long > boundary.right) {
+    throw 'Current verion only support the search within the boundary';
+  }
   for (let key in grids) {
     if (lat >= grids[key].bottom && lat <= grids[key].top && long >= grids[key].left && long <= grids[key].right) {
       let zips;
       if (grids[key].zips.length === 0){
+  
         // if no zips exist in this grid, expand the grid (there're are several ways to do, define a bigger grid set or find outer layer gradutually for demo purpose)
         for (let layer = 1; layer <= partition; layer++) {
+          console.log(layer);
           let surroundGridIds = getEdgeGridId(grids[key].id, layer);
           let surroundGrids = surroundGridIds.map(id => grids[id]);
           zips = surroundGrids.reduce((acc, current) => acc.concat(current.zips), []);

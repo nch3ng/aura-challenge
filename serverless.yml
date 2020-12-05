@@ -10,6 +10,8 @@ provider:
     SERVICE_NAME: ${self:service}
     ZIP_TABLE: zips-${opt:stage, self:provider.stage}
     GRID_TABLE: grids-${opt:stage, self:provider.stage}
+    ZIPS_DATA_PATH: ./src/data.json
+    GRID_INDEX_DATA_PATH: ./src/grids.index.json
   iamRoleStatements:
     - Effect: Allow
       Action:

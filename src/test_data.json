@@ -182,7 +182,7 @@
   {
     "zip": "01014",
     "type": "PO BOX",
-    "primary_city": "Chicopee",
+    "primary_city": "Test City123",
     "acceptable_cities": null,
     "unacceptable_cities": null,
     "state": "MA",
@@ -198,7 +198,7 @@
     "zip": "01020",
     "type": "STANDARD",
     "primary_city": "Chicopee",
-    "acceptable_cities": null,
+    "acceptable_cities": "Test City123",
     "unacceptable_cities": null,
     "state": "MA",
     "county": "Hampden County",

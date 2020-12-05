@@ -3,6 +3,6 @@
   "path": "/zipcode/search",
   "headers": {},
   "queryStringParameters": {
-    "zipcode": "0158"
+    "zipcode": "01583"
   }
 }

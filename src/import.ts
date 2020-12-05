@@ -8,7 +8,7 @@ import * as util from './utils';
 import { Grid, Zip } from './types';
 const dynamoClient = new aws.DynamoDB.DocumentClient();
 
-module.exports.importGrid = async event => {
+const importGrid = async event => {
 
   const grids = JSON.parse(fs.readFileSync('./src/grid.min.json').toString());
   let result: any;
@@ -41,7 +41,7 @@ module.exports.importGrid = async event => {
   };
 }
 
-module.exports.importZip = async event => {
+const importZip = async event => {
   let zips: Zip [];
   let grids: Grid [];
   let i = 1;
@@ -98,17 +98,17 @@ module.exports.importZip = async event => {
   };
 }
 
-module.exports.generateGrid = async event => {
+const generateGrid = async event => {
   // do stuff...
   
   let zips: Zip [];
 
   try {
-    zips = JSON.parse(fs.readFileSync('./src/data.json').toString());
+    zips = JSON.parse(fs.readFileSync('./src/test_data.json').toString());
     
     const grids: Grid [] = util.buildGrids(zips);
     util.assignZips(grids, zips);
-    fs.writeFile('./src/grids.json', JSON.stringify(grids), function (err) {
+    fs.writeFile('./src/test_grids.json', JSON.stringify(grids), function (err) {
       if (err) return console.log(err);
       console.log('Successfully saved to grid.json');
     });
@@ -119,7 +119,7 @@ module.exports.generateGrid = async event => {
       gridsIndex[grid.id] = grid;
     }
 
-    fs.writeFile('./src/grids.index.json', JSON.stringify(gridsIndex), function (err) {
+    fs.writeFile('./src/test_grids.index.json', JSON.stringify(gridsIndex), function (err) {
       if (err) return console.log(err);
       console.log('Successfully saved to grid.index.json');
     });
@@ -140,3 +140,5 @@ module.exports.generateGrid = async event => {
     })
   };
 };
+
+export { generateGrid, importGrid, importZip };
