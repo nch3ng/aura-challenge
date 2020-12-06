@@ -6,18 +6,18 @@ export default class DataStore {
   dataPath: string;
   gridPath: string;
   _zips: Zip[];
-  _indexGrids: {};
+  _indexGrids: any;
 
   mapTable = {
     city: ["primary_city", "acceptable_cities"],
     zipcode: ["zip"]
   };
-  constructor(dataPath: any, gridPath: any) {
+  constructor(dataPath: string, gridPath: string) {
     this.dataPath = dataPath;
     this.gridPath = gridPath;
   }
 
-  connect() {
+  connect(): void {
     // dataPath is file
     try {
       this._zips = JSON.parse(fs.readFileSync(this.dataPath).toString());
@@ -28,17 +28,17 @@ export default class DataStore {
     // dataPath is database
   }
 
-  zips() {
+  zips(): Zip[] {
     return this._zips;
   }
 
-  indexGrids() {
+  indexGrids(): { [id: string]: Zip } {
     return this._indexGrids;
   }
 
-  search(param) {
+  search(param): Zip[] {
     return this._zips.filter((zip: Zip) => {
-      for (let field of this.mapTable[param.name]) {
+      for (const field of this.mapTable[param.name]) {
         // console.log(zip[field]);
         if (!!zip[field] && zip[field].includes(param.value)) {
           return true;

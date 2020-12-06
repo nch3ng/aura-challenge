@@ -1,5 +1,7 @@
+/*eslint @typescript-eslint/no-unused-vars: "off"*/
 /*
- * This is the tools used to import to DB, but eventually are not used. The generateGrid function is to generate a set of grids in the maps.  Each grid includes a set of zipcodes
+ * This is the tools used to import to DB, but eventually are not used. The generateGrid function
+ * is to generate a set of grids in the maps.  Each grid includes a set of zipcodes
  */
 
 import * as fs from "fs";
@@ -8,12 +10,12 @@ import * as util from "./utils";
 import { Grid, Zip } from "./types";
 const dynamoClient = new aws.DynamoDB.DocumentClient();
 
-const importGrid = async event => {
+const importGrid = async (event: any) => {
   const grids = JSON.parse(fs.readFileSync("./src/grid.min.json").toString());
   let result: any;
   let i = 1;
-  for (let grid of grids) {
-    let gridParams = {
+  for (const grid of grids) {
+    const gridParams = {
       TableName: "grids-dev",
       Item: {
         id: i.toString(),
@@ -25,7 +27,7 @@ const importGrid = async event => {
     };
     try {
       result = await dynamoClient.put(gridParams).promise();
-      i++;
+      i += 1;
       console.log(result);
     } catch (err) {
       console.error(
@@ -53,9 +55,9 @@ const importZip = async event => {
     zips = JSON.parse(fs.readFileSync("./src/data.json").toString());
     grids = JSON.parse(fs.readFileSync("./src/grid.min.json").toString());
     console.log(`Total: ${zips.length}`);
-    for (let zip of zips) {
+    for (const zip of zips) {
       let belong = false;
-      for (let grid of grids) {
+      for (const grid of grids) {
         const zLat = parseFloat(zip.latitude);
         const zlong = parseFloat(zip.longitude);
         if (
@@ -64,7 +66,7 @@ const importZip = async event => {
           zlong >= grid.left &&
           zlong <= grid.right
         ) {
-          let zipParams = {
+          const zipParams = {
             TableName: "zips-dev",
             Item: {
               zip: zip.zip,
@@ -83,11 +85,11 @@ const importZip = async event => {
               grid_id: grid.id
             }
           };
-          let result = await dynamoClient.put(zipParams).promise();
+          await dynamoClient.put(zipParams).promise();
           belong = true;
           console.log(`putItem succeed ${i}: ${zip.zip}`);
           // console.log(result);
-          i++;
+          i += 1;
           break;
         }
       }
@@ -122,9 +124,9 @@ const generateGrid = async event => {
       console.log("Successfully saved to grid.json");
     });
 
-    let gridsIndex: any = {};
+    const gridsIndex: any = {};
 
-    for (let grid of grids) {
+    for (const grid of grids) {
       gridsIndex[grid.id] = grid;
     }
 

@@ -1,0 +1,9 @@
+.serverless
+.vscode
+*.config.js
+.webpack
+_warmup
+**/*.js
+node_modules
+.vscode
+.git
