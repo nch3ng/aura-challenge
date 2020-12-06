@@ -213,8 +213,8 @@ describe("basic tests", () => {
 
   beforeAll(() => {
     // inject test data
-    process.env.ZIPS_DATA_PATH = "./src/test_data.json";
-    process.env.GRID_INDEX_DATA_PATH = "./src/test_grids.index.json";
+    process.env.ZIPS_DATA_PATH = "./data/test_data.json";
+    process.env.GRID_INDEX_DATA_PATH = "./data/test_grids.index.json";
   });
 
   test("handler function exists", () => {
