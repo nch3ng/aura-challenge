@@ -64,11 +64,12 @@ export const assignZips = (grids: Grid[], zips: Zip[]) => {
 
 export const readParams = event => {
   const validParams = ["city", "zipcode", "coordinate"]; // Accept params
-  let params: any = event.queryStringParameters || JSON.parse(event.body);
+  let params: any = event.queryStringParameters;
+  //  || JSON.parse(event.body);
   if (params) {
     for (let key in params) {
       if (validParams.includes(key)) {
-        return { name: key, value: params[key] };
+        return { name: key, value: params[key], filter: params.filter };
       }
     }
     return null;

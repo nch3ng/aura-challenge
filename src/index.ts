@@ -27,8 +27,8 @@ const handler = async event => {
       result = ds.findClosestZip(param.value);
     }
 
-    if (event.queryStringParameters && event.queryStringParameters.filter) {
-      result = ds.filter(result, event.queryStringParameters.filter);
+    if (param.filter) {
+      result = ds.filter(result, param.filter);
     } 
     // else if (event.body) {
     //   const filter = JSON.parse(event.body).filter;
