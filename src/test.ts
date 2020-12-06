@@ -29,7 +29,7 @@ const buildQueryParams = (param: string, value: any) => {
 //   };
 // };
 
-describe("basic tests", () => {
+describe("zipcode API handler", () => {
   const full_city_search_result = [
     {
       zip: "01002",
