@@ -22,6 +22,8 @@ export default class DataStore {
     try {
       this._zips = JSON.parse(fs.readFileSync(this.dataPath).toString());
       this._indexGrids = JSON.parse(fs.readFileSync(this.gridPath).toString());
+
+      // Set condition if data is on cloud database
     } catch (e) {
       throw e;
     }

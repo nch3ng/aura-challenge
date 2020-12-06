@@ -1,4 +1,4 @@
-import { handler } from "../src/index";
+import { handler } from "./index";
 
 const buildQueryParams = (param: string, value: any) => {
   const response: any = {
