@@ -14,18 +14,11 @@ const handler = async (event: any): Promise<any> => {
       process.env.GRID_INDEX_DATA_PATH || ""
     );
     ds.connect();
-
     const param: any = util.readParams(event);
 
     if (!param) throw "400 Invalid Input";
 
-    if (param.name !== "coordinate") {
-      // Filter with partial or full city name or zipcode
-      result = ds.search(param);
-    } else {
-      // Check coordinates
-      result = ds.findClosestZip(param.value);
-    }
+    result = param.name !== "coordinate" ? ds.search(param) : ds.findClosestZip(param.value);
 
     if (param.filter) {
       result = ds.filter(result, param.filter);
