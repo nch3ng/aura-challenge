@@ -9,7 +9,7 @@ export const buildGrids = (zips: Zip[]): Grid[] => {
   let minLong = 100,
     maxLong = -100;
   const grids: Grid[] = [];
-  for (let zip of zips) {
+  for (const zip of zips) {
     const [zLat, zLong] = [+zip.latitude, +zip.longitude];
 
     if (zLat < minLat) minLat = zLat;
@@ -25,7 +25,7 @@ export const buildGrids = (zips: Zip[]): Grid[] => {
   const partitionLong = LongLength / partition;
   for (let i = 0; i < partition; i++) {
     for (let j = 0; j < partition; j++) {
-      let grid: Grid = {
+      const grid: Grid = {
         id: i * 10 + 1 + j,
         top: maxLat - i * partitionLat,
         left: minLong + j * partitionLong,
@@ -44,9 +44,9 @@ export const buildGrids = (zips: Zip[]): Grid[] => {
   return grids;
 };
 
-export const assignZips = (grids: Grid[], zips: Zip[]) => {
-  for (let zip of zips) {
-    for (let grid of grids) {
+export const assignZips = (grids: Grid[], zips: Zip[]): Grid[] => {
+  for (const zip of zips) {
+    for (const grid of grids) {
       const [zLat, zLong] = [+zip.latitude, +zip.longitude];
 
       if (
@@ -64,10 +64,10 @@ export const assignZips = (grids: Grid[], zips: Zip[]) => {
 
 export const readParams = event => {
   const validParams = ["city", "zipcode", "coordinate"]; // Accept params
-  let params: any = event.queryStringParameters;
+  const params: any = event.queryStringParameters;
   //  || JSON.parse(event.body);
   if (params) {
-    for (let key in params) {
+    for (const key in params) {
       if (validParams.includes(key)) {
         return { name: key, value: params[key], filter: params.filter };
       }
@@ -85,7 +85,7 @@ export const calDistance = (p1: Point, p2: Point): number => {
 export const findShorestDistanceZip = (zips: Zip[], point: Point): Zip => {
   let minDistance = 10000;
   let shortestZip: any;
-  for (let zip of zips) {
+  for (const zip of zips) {
     const distance = calDistance(
       { lat: +zip.latitude, long: +zip.longitude },
       point
@@ -99,18 +99,21 @@ export const findShorestDistanceZip = (zips: Zip[], point: Point): Zip => {
 };
 
 const getEdgeGridId = (currentId, layer: number) => {
-  let id = currentId;
+  const id = currentId;
 
   const i = Math.floor((id - 1) / partition);
   const j = (id - 1) % partition;
 
-  let surroundGridId: number[] = [];
+  const surroundGridId: number[] = [];
 
   for (let ii = i - layer; ii <= i + layer; ii++) {
     for (let jj = j - layer; jj <= j + layer; jj++) {
       if (
         (Math.abs(ii - i) === layer || Math.abs(jj - j) === layer) &&
-        ii < partition && jj < partition && ii >= 0 && jj >= 0
+        ii < partition &&
+        jj < partition &&
+        ii >= 0 &&
+        jj >= 0
       ) {
         // console.log(`${ii} ${jj}`);
         surroundGridId.push(ii * 10 + jj + 1);
@@ -125,7 +128,7 @@ export const findClosestZip = (grids: any, coordinate: number[] | string) => {
     // handle coordinate in body
     coordinate = coordinate.split(",").map(coord => +coord);
   }
-  let boundary = {
+  const boundary = {
     top: grids[1].top,
     left: grids[1].left,
     right: grids[partition * partition].right,
@@ -142,7 +145,7 @@ export const findClosestZip = (grids: any, coordinate: number[] | string) => {
   ) {
     throw "Current verion only support the search within the boundary";
   }
-  for (let key in grids) {
+  for (const key in grids) {
     if (
       lat >= grids[key].bottom &&
       lat <= grids[key].top &&
@@ -151,11 +154,12 @@ export const findClosestZip = (grids: any, coordinate: number[] | string) => {
     ) {
       let zips;
       if (grids[key].zips.length === 0) {
-        // if no zips exist in this grid, expand the grid (there're are several ways to do, define a bigger grid set or find outer layer gradutually for demo purpose)
+        // if no zips exist in this grid, expand the grid (there're are several ways to do, define a bigger
+        // grid set or find outer layer gradutually for demo purpose)
         for (let layer = 1; layer <= partition; layer++) {
           console.log(layer);
-          let surroundGridIds = getEdgeGridId(grids[key].id, layer);
-          let surroundGrids = surroundGridIds.map(id => grids[id]);
+          const surroundGridIds = getEdgeGridId(grids[key].id, layer);
+          const surroundGrids = surroundGridIds.map(id => grids[id]);
           zips = surroundGrids.reduce(
             (acc, current) => acc.concat(current.zips),
             []
@@ -163,7 +167,7 @@ export const findClosestZip = (grids: any, coordinate: number[] | string) => {
           if (zips.length > 0) break;
         }
       } else {
-        zips = grids[key].zips;
+        ({ zips } = grids[key]);
       }
       return findShorestDistanceZip(zips, { lat, long });
     }
@@ -177,9 +181,16 @@ export const filter = (zips: Zip[], filterStr) => {
     const operator = filterObject.$filter.type;
     let field, value;
     if (filterObject.$filter.left.type === "property") {
-      //   console.log(filter);
-      field = filterObject.$filter.left.name;
-      value = filterObject.$filter.right.value;
+      ({
+        $filter: {
+          left: { name: field }
+        }
+      } = filterObject);
+      ({
+        $filter: {
+          right: { value }
+        }
+      } = filterObject);
     } else {
       throw 'Hasn\'t support deeper filter at the moment';
     }

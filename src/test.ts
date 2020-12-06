@@ -1,8 +1,7 @@
-import DataStore from "../src/DataStore";
 import { handler } from "../src/index";
 
 const buildQueryParams = (param: string, value: any) => {
-  let response: any = {
+  const response: any = {
     httpMethod: "GET",
     path: "/zipcode/search",
     headers: {},
@@ -12,23 +11,23 @@ const buildQueryParams = (param: string, value: any) => {
   return response;
 };
 
-const buildRequestBody = (param: string, value: any, filter?: string) => {
-  let bodyStr;
+// const buildRequestBody = (param: string, value: any, filter?: string) => {
+//   let bodyStr;
 
-  if (filter) {
-    bodyStr = `{\"${param}\":\"${value}\", \"filter\":\"${filter}\"}`;
-  } else {
-    bodyStr = `{\"${param}\":\"${value}\"}`;
-  }
-  return {
-    httpMethod: "POST",
-    path: "/zipcode/search",
-    headers: {
-      "content-type": "application/json"
-    },
-    body: bodyStr
-  };
-};
+//   if (filter) {
+//     bodyStr = `{\"${param}\":\"${value}\", \"filter\":\"${filter}\"}`;
+//   } else {
+//     bodyStr = `{\"${param}\":\"${value}\"}`;
+//   }
+//   return {
+//     httpMethod: "POST",
+//     path: "/zipcode/search",
+//     headers: {
+//       "content-type": "application/json"
+//     },
+//     body: bodyStr
+//   };
+// };
 
 describe("basic tests", () => {
   const full_city_search_result = [

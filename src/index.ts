@@ -3,15 +3,15 @@ import DataStore from "./DataStore";
 import { generateGrid } from "./import";
 
 // End of building and assign zips
-const handler = async event => {
+const handler = async (event: any): Promise<any> => {
   // do stuff...
-  console.log('Received event:', JSON.stringify(event, null, 2));
+  // console.log("Received event:", JSON.stringify(event, null, 2));
   let result;
 
   try {
     const ds: DataStore = new DataStore(
-      process.env.ZIPS_DATA_PATH,
-      process.env.GRID_INDEX_DATA_PATH
+      process.env.ZIPS_DATA_PATH || "",
+      process.env.GRID_INDEX_DATA_PATH || ""
     );
     ds.connect();
 
@@ -29,7 +29,7 @@ const handler = async event => {
 
     if (param.filter) {
       result = ds.filter(result, param.filter);
-    } 
+    }
     // else if (event.body) {
     //   const filter = JSON.parse(event.body).filter;
     //   if (JSON.parse(event.body).filter) {
@@ -45,6 +45,7 @@ const handler = async event => {
     };
   }
 
+  // Lambda should return body in JSON string format
   return {
     statusCode: 200,
     zips: result
