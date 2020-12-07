@@ -26,7 +26,8 @@
   },
   "dependencies": {
     "aws-sdk": "^2.799.0",
-    "odata-parser": "^1.4.1"
+    "odata-parser": "^1.4.1",
+    "yup": "^0.32.3"
   },
   "scripts": {
     "format:fix": "prettier --write **/*.{js,ts,md}",
