@@ -239,6 +239,14 @@ describe("zipcode API handler", () => {
       );
     });
 
+    it("should return empty if no match with city query", async () => {
+      const event = buildQueryParams("city", "Test 1City23");
+      await expect(handler(event)).resolves.toHaveProperty(
+        "zips",
+        []
+      );
+    });
+
     it("should look up zipcodes with full zipcode", async () => {
       const event = buildQueryParams("zipcode", "01013");
 
@@ -253,6 +261,14 @@ describe("zipcode API handler", () => {
       await expect(handler(event)).resolves.toHaveProperty(
         "zips",
         partial_zip_search_result
+      );
+    });
+
+    it("should return empty if no match with zipcode query", async () => {
+      const event = buildQueryParams("zipcode", "12345");
+      await expect(handler(event)).resolves.toHaveProperty(
+        "zips",
+        []
       );
     });
 
