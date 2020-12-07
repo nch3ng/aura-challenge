@@ -290,6 +290,29 @@ describe("zipcode API handler", () => {
         "error",
         "400 Invalid Input"
       );
+
+      const event1 = {
+        httpMethod: "GET",
+        path: "/zipcode/search",
+        headers: {}
+      };
+
+      await expect(handler(event1)).resolves.toHaveProperty(
+        "error",
+        "400 Invalid Input"
+      );
+
+      const event2 = {
+        httpMethod: "GET",
+        path: "/zipcode/search",
+        headers: {},
+        queryStringParameters: {}
+      };
+
+      await expect(handler(event2)).resolves.toHaveProperty(
+        "error",
+        "400 Invalid Input"
+      );
     });
 
     it("should return error if with bad filter", async () => {

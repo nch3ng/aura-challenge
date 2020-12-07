@@ -1,0 +1,8 @@
+{
+  "httpMethod": "GET",
+  "path": "/zipcode/search",
+  "headers": {},
+  "queryStringParameters": {
+    "city1": "22"
+  }
+}
